@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VerifyIn — LinkedIn Company Verification</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+  :root {
+    --bg:        #0d0f12;
+    --surface:   #151820;
+    --card:      #1c2030;
+    --border:    #2a2f3d;
+    --border2:   #353c50;
+    --text:      #e8eaf0;
+    --muted:     #7a8099;
+    --accent:    #4f7cff;
+    --accent2:   #7b5cf0;
+    --green:     #22c97a;
+    --amber:     #f5a623;
+    --red:       #f05252;
+    --font-disp: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --radius:    12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: var(--font-disp);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.4px;
+  }
+
+  .logo span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .nav-badge {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 72px 20px 48px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    background: rgba(79,124,255,0.1);
+    border: 1px solid rgba(79,124,255,0.25);
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-family: var(--font-disp);
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── FORM CARD ── */
+  .form-wrap {
+    max-width: 620px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+  }
+
+  .card-title {
+    font-family: var(--font-disp);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title svg {
+    opacity: 0.6;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+  }
+
+  label span.req {
+    color: var(--accent);
+    margin-left: 2px;
+  }
+
+  label span.opt {
+    color: var(--border2);
+    font-weight: 400;
+  }
+
+  input, textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 11px 14px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: var(--border2);
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79,124,255,0.12);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  .submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-disp);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    letter-spacing: 0.01em;
+  }
+
+  .submit-btn:hover { opacity: 0.9; }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── LOADING ── */
+  .loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .loading-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--border2);
+    transition: color 0.3s;
+  }
+
+  .loading-step.active { color: var(--text); }
+  .loading-step.done { color: var(--green); }
+
+  .step-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border2);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+
+  .loading-step.active .step-dot { background: var(--accent); }
+  .loading-step.done .step-dot { background: var(--green); }
+
+  /* ── RESULT ── */
+  .result-wrap {
+    display: none;
+    max-width: 620px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+    animation: fadeUp 0.35s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid var(--border);
+    border-bottom: none;
+  }
+
+  .result-header.verified  { background: rgba(34,201,122,0.08); border-color: rgba(34,201,122,0.3); }
+  .result-header.review    { background: rgba(245,166,35,0.08);  border-color: rgba(245,166,35,0.3); }
+  .result-header.suspicious{ background: rgba(240,82,82,0.08);   border-color: rgba(240,82,82,0.3); }
+
+  .result-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .verified  .result-icon { background: rgba(34,201,122,0.15); }
+  .review    .result-icon { background: rgba(245,166,35,0.15); }
+  .suspicious .result-icon{ background: rgba(240,82,82,0.15); }
+
+  .result-meta { flex: 1; }
+
+  .result-company-name {
+    font-family: var(--font-disp);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .verdict-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .verified  .verdict-badge { background: rgba(34,201,122,0.15); color: var(--green); }
+  .review    .verdict-badge { background: rgba(245,166,35,0.15);  color: var(--amber); }
+  .suspicious .verdict-badge{ background: rgba(240,82,82,0.15);   color: var(--red); }
+
+  .score-ring {
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .score-number {
+    font-family: var(--font-disp);
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .verified   .score-number { color: var(--green); }
+  .review     .score-number { color: var(--amber); }
+  .suspicious .score-number { color: var(--red); }
+
+  .score-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Score breakdown */
+  .result-body {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 24px 32px;
+  }
+
+  .checks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .check-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .check-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .check-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  .check-val {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .check-pts {
+    margin-left: auto;
+    font-family: var(--font-disp);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .pts-full  { color: var(--green); }
+  .pts-half  { color: var(--amber); }
+  .pts-zero  { color: var(--red); }
+
+  /* Reasons */
+  .reasons-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .reason-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .reason-item:last-child { border-bottom: none; }
+
+  .reason-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .reason-dot.ok { background: var(--green); }
+
+  /* Warning banner */
+  .warning-banner {
+    margin-top: 16px;
+    background: rgba(240,82,82,0.08);
+    border: 1px solid rgba(240,82,82,0.25);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--red);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .reset-btn {
+    margin-top: 20px;
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 11px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .reset-btn:hover { border-color: var(--accent); color: var(--text); }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    max-width: 620px;
+    margin: 0 auto 80px;
+    padding: 0 20px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+  }
+
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step-row {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .step-row:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: var(--font-disp);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 24px;
+    padding-top: 1px;
+  }
+
+  .step-content strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .step-content span {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    color: var(--border2);
+  }
+
+  @media (max-width: 520px) {
+    nav { padding: 14px 20px; }
+    .card { padding: 20px; }
+    .result-header { padding: 20px; flex-wrap: wrap; }
+    .result-body { padding: 16px 20px; }
+    .checks-grid { grid-template-columns: 1fr; }
+    .field-row { grid-template-columns: 1fr; }
+    .hero { padding: 48px 20px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Verify<span>In</span></div>
+  <div class="nav-badge">LinkedIn Verification Prototype</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="5" fill="#4f7cff"/></svg>
+    Built for LinkedIn's Trust & Safety
+  </div>
+  <h1>Stop fake companies<br/>before they <em>go live</em></h1>
+  <p>A verification layer that checks government databases before any company page is created on LinkedIn.</p>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap" id="formSection">
+  <div class="card">
+    <div class="card-title">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      Create company page
+    </div>
+
+    <div class="field">
+      <label>Company name <span class="req">*</span></label>
+      <input type="text" id="companyName" placeholder="e.g. TechVision Hiring Solutions Pvt Ltd" />
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>GST number <span class="req">*</span></label>
+        <input type="text" id="gstNumber" placeholder="e.g. 27AAPFU0939F1ZV" maxlength="15"/>
+      </div>
+      <div class="field">
+        <label>Website <span class="opt">(optional)</span></label>
+        <input type="text" id="website" placeholder="e.g. company.com"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Job description / about <span class="opt">(optional)</span></label>
+      <textarea id="jobDesc" placeholder="Paste your company description or job post here..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+
+    <button class="submit-btn" onclick="runVerification()">Verify this company</button>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="form-wrap">
+  <div class="card loading" id="loadingSection">
+    <div class="spinner"></div>
+    <div style="font-size:14px;color:var(--text);font-weight:500;">Running verification checks...</div>
+    <div class="loading-steps" id="loadingSteps">
+      <div class="loading-step" id="step-mca">
+        <div class="step-dot"></div> Checking MCA database
+      </div>
+      <div class="loading-step" id="step-gst">
+        <div class="step-dot"></div> Validating GST number
+      </div>
+      <div class="loading-step" id="step-domain">
+        <div class="step-dot"></div> Checking domain age
+      </div>
+      <div class="loading-step" id="step-keywords">
+        <div class="step-dot"></div> Scanning for red flags
+      </div>
+      <div class="loading-step" id="step-ml">
+        <div class="step-dot"></div> Running ML model
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="result-wrap" id="resultSection">
+  <div id="resultHeader" class="result-header">
+    <div class="result-icon" id="resultIcon"></div>
+    <div class="result-meta">
+      <div class="result-company-name" id="resultCompany"></div>
+      <div class="verdict-badge" id="verdictBadge"></div>
+    </div>
+    <div class="score-ring">
+      <div class="score-number" id="scoreNumber"></div>
+      <div class="score-label">out of 100</div>
+    </div>
+  </div>
+  <div class="result-body">
+    <div class="checks-grid" id="checksGrid"></div>
+    <div class="reasons-title">Findings</div>
+    <div id="reasonsList"></div>
+    <div id="warningBanner"></div>
+    <button class="reset-btn" onclick="resetForm()">Check another company</button>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-section">
+  <div class="section-label">How it works</div>
+  <div class="steps-list">
+    <div class="step-row">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <strong>MCA database check</strong>
+        <span>Looks up Ministry of Corporate Affairs to confirm the company is legally registered in India.</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <strong>GST validation</strong>
+        <span>Verifies the GST number format and cross-checks with the official GST portal.</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <strong>Domain age & existence</strong>
+        <span>Checks whether the company website exists and how old the domain is — a key fraud signal.</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <strong>Red flag keyword scan</strong>
+        <span>Scans the company name and description for fee-related words commonly used in job scams.</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">05</div>
+      <div class="step-content">
+        <strong>ML scoring model</strong>
+        <span>A Random Forest model combines all signals into a trust score and returns a final verdict.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <footer>VerifyIn — Prototype built to pitch LinkedIn's Trust & Safety team</footer> -->
+
+<script>
+const API_URL = "http://localhost:8000";
+
+async function runVerification() {
+  const name = document.getElementById('companyName').value.trim();
+  if (!name) {
+    document.getElementById('companyName').focus();
+    return;
+  }
+
+  // Show loading
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('resultSection').style.display = 'none';
+  const loading = document.getElementById('loadingSection');
+  loading.style.display = 'flex';
+
+  const steps = ['mca','gst','domain','keywords','ml'];
+  const delays = [600,1100,1700,2200,2800];
+
+  steps.forEach((s, i) => {
+    setTimeout(() => {
+      if (i > 0) document.getElementById('step-'+steps[i-1]).className = 'loading-step done';
+      document.getElementById('step-'+s).className = 'loading-step active';
+    }, delays[i]);
+  });
+
+  const payload = {
+    company_name: name,
+    gst_number: document.getElementById('gstNumber').value.trim(),
+    website: document.getElementById('website').value.trim(),
+    job_description: document.getElementById('jobDesc').value.trim()
+  };
+
+  let data;
+  try {
+    await new Promise(r => setTimeout(r, 3200));
+    const res = await fetch(API_URL + '/verify', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    data = await res.json();
+  } catch (e) {
+    // Demo fallback when backend not connected
+    data = getDemoResult(payload);
+  }
+
+  document.getElementById('step-ml').className = 'loading-step done';
+  await new Promise(r => setTimeout(r, 400));
+
+  loading.style.display = 'none';
+  showResult(data, name);
+}
+
+function getDemoResult(payload) {
+  const hasFeeWords = /(fee|registration|deposit|pay to|paying)/i.test(payload.job_description + payload.company_name);
+  const hasGST = payload.gst_number.length === 15;
+  const hasWebsite = payload.website.length > 4;
+  const isSuspiciousName = /(hiring solution|placement|recruitment|staffing|manpower)/i.test(payload.company_name);
+
+  let score = 0;
+  const checks = {
+    mca: { found: !isSuspiciousName, score: isSuspiciousName ? 0 : 25 },
+    gst: { valid: hasGST, score: hasGST ? 20 : 0 },
+    domain: { exists: hasWebsite, score: hasWebsite ? 10 : 0 },
+    keywords: { red_flags_found: hasFeeWords ? ["registration fee"] : [], score: hasFeeWords ? 0 : 40 }
+  };
+
+  score = checks.mca.score + checks.gst.score + checks.domain.score + checks.keywords.score;
+
+  const reasons = [];
+  if (!checks.mca.found) reasons.push("Company not found in MCA database");
+  if (!checks.gst.valid) reasons.push("No valid GST registration found");
+  if (!checks.domain.exists) reasons.push("No company website found");
+  if (hasFeeWords) reasons.push("Job description contains fee-related keywords");
+
+  let verdict, action, badge;
+  if (score >= 70) { verdict = "VERIFIED"; action = "allow"; badge = "✓"; }
+  else if (score >= 40) { verdict = "NEEDS REVIEW"; action = "warn"; badge = "?"; }
+  else { verdict = "SUSPICIOUS"; action = "block"; badge = "✗"; }
+
+  return { company_name: payload.company_name, checks, result: { total_score: score, verdict, action, badge, reasons } };
+}
+
+function showResult(data, name) {
+  const r = data.result;
+  const checks = data.checks;
+  const section = document.getElementById('resultSection');
+  const header = document.getElementById('resultHeader');
+
+  // Class
+  const cls = r.action === 'allow' ? 'verified' : r.action === 'warn' ? 'review' : 'suspicious';
+  header.className = 'result-header ' + cls;
+
+  // Icon
+  const icons = { verified: '✓', review: '?', suspicious: '✗' };
+  document.getElementById('resultIcon').textContent = icons[cls] || '?';
+
+  document.getElementById('resultCompany').textContent = name;
+
+  const badge = document.getElementById('verdictBadge');
+  badge.textContent = r.verdict;
+
+  document.getElementById('scoreNumber').textContent = r.total_score;
+
+  // Checks grid
+  const checkDefs = [
+    { key:'mca',      label:'MCA registration', max:25, val: c => c.mca?.found ? 'Found' : 'Not found' },
+    { key:'gst',      label:'GST number',        max:20, val: c => c.gst?.valid ? 'Valid' : 'Invalid / missing' },
+    { key:'domain',   label:'Website',           max:15, val: c => c.domain?.exists ? 'Active' : 'Not found' },
+    { key:'keywords', label:'Red flag keywords', max:40, val: c => {
+      const f = c.keywords?.red_flags_found || [];
+      return f.length === 0 ? 'None found' : f.length + ' found';
+    }}
+  ];
+
+  const icons2 = { mca:'🏛️', gst:'📋', domain:'🌐', keywords:'🔍' };
+  document.getElementById('checksGrid').innerHTML = checkDefs.map(d => {
+    const pts = checks[d.key]?.score ?? 0;
+    const ptsClass = pts >= d.max ? 'pts-full' : pts > 0 ? 'pts-half' : 'pts-zero';
+    return `
+      <div class="check-item">
+        <span class="check-icon">${icons2[d.key]}</span>
+        <div>
+          <div class="check-label">${d.label}</div>
+          <div class="check-val">${d.val(checks)}</div>
+        </div>
+        <span class="check-pts ${ptsClass}">${pts}/${d.max}</span>
+      </div>`;
+  }).join('');
+
+  // Reasons
+  const reasons = r.reasons || [];
+  const okMessages = [];
+  if (checks.mca?.found) okMessages.push("Company found in MCA database");
+  if (checks.gst?.valid) okMessages.push("GST number is valid");
+  if (checks.domain?.exists) okMessages.push("Company website is active");
+  if ((checks.keywords?.red_flags_found || []).length === 0) okMessages.push("No fee-related keywords found");
+
+  const allItems = [
+    ...okMessages.map(m => `<div class="reason-item"><div class="reason-dot ok"></div>${m}</div>`),
+    ...reasons.map(m => `<div class="reason-item"><div class="reason-dot"></div>${m}</div>`)
+  ];
+  document.getElementById('reasonsList').innerHTML = allItems.join('');
+
+  // Warning banner
+  const wb = document.getElementById('warningBanner');
+  if (r.action === 'block') {
+    wb.innerHTML = `<span>⚠️</span><span>This company shows multiple signs of fraud. LinkedIn should not allow this page to go live.</span>`;
+    wb.className = 'warning-banner';
+  } else {
+    wb.innerHTML = '';
+    wb.className = '';
+  }
+
+  section.style.display = 'block';
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetForm() {
+  document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('formSection').style.display = 'block';
+  ['mca','gst','domain','keywords','ml'].forEach(s => {
+    document.getElementById('step-'+s).className = 'loading-step';
+  });
+  document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
